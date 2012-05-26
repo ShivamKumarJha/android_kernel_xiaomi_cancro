@@ -2382,6 +2382,7 @@ retry:
 			if (put_user_preempt_disabled(thread->return_error2, (uint32_t __user *)ptr))
 				return -EFAULT;
 			ptr += sizeof(uint32_t);
+			binder_stat_br(proc, thread, thread->return_error2);
 			if (ptr == end)
 				goto done;
 			thread->return_error2 = BR_OK;
@@ -2389,6 +2390,7 @@ retry:
 		if (put_user_preempt_disabled(thread->return_error, (uint32_t __user *)ptr))
 			return -EFAULT;
 		ptr += sizeof(uint32_t);
+		binder_stat_br(proc, thread, thread->return_error);
 		thread->return_error = BR_OK;
 		goto done;
 	}
@@ -2551,6 +2553,7 @@ retry:
 			if (put_user_preempt_disabled(death->cookie, (void * __user *)ptr))
 				return -EFAULT;
 			ptr += sizeof(void *);
+			binder_stat_br(proc, thread, cmd);
 			binder_debug(BINDER_DEBUG_DEATH_NOTIFICATION,
 				     "binder: %d:%d %s %p\n",
 				      proc->pid, thread->pid,
@@ -2659,6 +2662,7 @@ done:
 			     proc->pid, thread->pid);
 		if (put_user_preempt_disabled(BR_SPAWN_LOOPER, (uint32_t __user *)buffer))
 			return -EFAULT;
+		binder_stat_br(proc, thread, BR_SPAWN_LOOPER);
 	}
 	return 0;
 }
