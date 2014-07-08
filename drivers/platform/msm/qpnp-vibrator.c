@@ -103,12 +103,12 @@ static ssize_t qpnp_vib_level_store(struct device *dev,
 		return -EINVAL;
 	}
 
-	if (val < QPNP_VIB_MIN_LEVEL) {
-		pr_err("%s: level %d not in range (%d - %d), using min.", __func__, val, QPNP_VIB_MIN_LEVEL, QPNP_VIB_MAX_LEVEL);
-		val = QPNP_VIB_MIN_LEVEL;
-	} else if (val > QPNP_VIB_MAX_LEVEL) {
-		pr_err("%s: level %d not in range (%d - %d), using max.", __func__, val, QPNP_VIB_MIN_LEVEL, QPNP_VIB_MAX_LEVEL);
-		val = QPNP_VIB_MAX_LEVEL;
+	if (val < vib->vtg_min) {
+		pr_err("%s: level %d not in range (%d - %d), using min.", __func__, val, vib->vtg_min, vib->vtg_max);
+		val = vib->vtg_min;
+	} else if (val > vib->vtg_max) {
+		pr_err("%s: level %d not in range (%d - %d), using max.", __func__, val, vib->vtg_min, vib->vtg_max);
+		val = vib->vtg_max;
 	}
 
 	vib->vtg_level = val;
@@ -116,6 +116,8 @@ static ssize_t qpnp_vib_level_store(struct device *dev,
 	return strnlen(buf, count);
 }
 
+static DEVICE_ATTR(vtg_min, S_IRUGO, qpnp_vib_min_show, NULL);
+static DEVICE_ATTR(vtg_max, S_IRUGO, qpnp_vib_max_show, NULL);
 static DEVICE_ATTR(vtg_level, S_IRUGO | S_IWUSR, qpnp_vib_level_show, qpnp_vib_level_store);
 
 static int qpnp_vib_read_u8(struct qpnp_vib *vib, u8 *data, u16 reg)
@@ -221,6 +223,44 @@ static int qpnp_vib_set(struct qpnp_vib *vib, int on)
 
 	return rc;
 }
+EXPORT_SYMBOL(qpnp_vib_set);
+
+/* Begin Immersion changes */
+int qpnp_vib_set_with_vtglevel(struct qpnp_vib *vib, int vtglevel, int on)
+{
+	int rc;
+	u8 val;
+
+	if(vtglevel < vib_dev->vtg_min) vtglevel = vib_dev->vtg_min;
+	if(vtglevel > vib_dev->vtg_max) vtglevel = vib_dev->vtg_max;
+
+	if (on) {
+		val = vib->reg_vtg_ctl;
+		val &= ~QPNP_VIB_VTG_SET_MASK;
+		val |= (vtglevel & QPNP_VIB_VTG_SET_MASK);
+		rc = qpnp_vib_write_u8(vib, &val, QPNP_VIB_VTG_CTL(vib->base));
+		if (rc < 0)
+			return rc;
+		vib->reg_vtg_ctl = val;
+		val = vib->reg_en_ctl;
+		val |= QPNP_VIB_EN;
+		rc = qpnp_vib_write_u8(vib, &val, QPNP_VIB_EN_CTL(vib->base));
+		if (rc < 0)
+			return rc;
+		vib->reg_en_ctl = val;
+	} else {
+		val = vib->reg_en_ctl;
+		val &= ~QPNP_VIB_EN;
+		rc = qpnp_vib_write_u8(vib, &val, QPNP_VIB_EN_CTL(vib->base));
+		if (rc < 0)
+			return rc;
+		vib->reg_en_ctl = val;
+	}
+
+	return rc;
+}
+EXPORT_SYMBOL(qpnp_vib_set_with_vtglevel);
+/* End Immersion changes */
 
 static void qpnp_vib_enable(struct timed_output_dev *dev, int value)
 {
@@ -393,6 +433,8 @@ static int __devinit qpnp_vibrator_probe(struct spmi_device *spmi)
 	if (rc < 0)
 		return rc;
 
+	device_create_file(vib->timed_dev.dev, &dev_attr_vtg_min);
+	device_create_file(vib->timed_dev.dev, &dev_attr_vtg_max);
 	device_create_file(vib->timed_dev.dev, &dev_attr_vtg_level);
 
 	vib_dev = vib;
