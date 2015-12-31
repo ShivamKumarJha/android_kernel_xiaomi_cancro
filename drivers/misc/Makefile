@@ -74,3 +74,4 @@ obj-$(CONFIG_UID_CPUTIME) 	+= uid_cputime.o
 obj-$(CONFIG_STM32_FW_UPDATER) += stm32fwu.o
 stm32fwu-objs := stm32-fwu-i2c.o stm32-bootloader.o
 obj-y += audio_service.o
+obj-y += sound_control.o
