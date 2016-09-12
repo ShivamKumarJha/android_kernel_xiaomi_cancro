@@ -568,7 +568,7 @@ static void handle_event_change(enum command_response cmd, void *data)
 				u32 *ptr = NULL;
 
 				dprintk(VIDC_DBG,
-					"%s - inst: %p buffer: %p extra: %p\n",
+					"%s - inst: %pK buffer: %pK extra: %pK\n",
 					__func__, inst,
 					event_notify->packet_buffer,
 					event_notify->exra_data_buffer);
@@ -1292,7 +1292,7 @@ static void handle_fbd(enum command_response cmd, void *data)
 		} else {
 			time_usec = 0;
 			dprintk(VIDC_DBG,
-					"Set zero timestamp for buffer 0x%pa, filled: %d, (hi:%u, lo:%u)\n",
+					"Set zero timestamp for buffer 0x%pKa, filled: %d, (hi:%u, lo:%u)\n",
 					&fill_buf_done->packet_buffer1,
 					fill_buf_done->filled_len1,
 					fill_buf_done->timestamp_hi,
@@ -1368,7 +1368,7 @@ static void handle_fbd(enum command_response cmd, void *data)
 
 		if (extra_idx && (extra_idx < VIDEO_MAX_PLANES)) {
 			dprintk(VIDC_DBG,
-			"extradata: userptr = %p;  bytesused = %d; length = %d\n",
+			"extradata: userptr = %pK;  bytesused = %d; length = %d\n",
 			(u8 *)vb->v4l2_planes[extra_idx].m.userptr,
 			vb->v4l2_planes[extra_idx].bytesused,
 			vb->v4l2_planes[extra_idx].length);
@@ -3119,7 +3119,7 @@ void msm_comm_flush_pending_dynamic_buffers(struct msm_vidc_inst *inst)
 		if (binfo && binfo->type ==
 			V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
 			dprintk(VIDC_DBG,
-				"%s: binfo = %pK device_addr = 0x%pa\n",
+				"%s: binfo = %pK device_addr = 0x%pKa\n",
 				__func__, binfo, &binfo->device_addr[0]);
 			buf_ref_put(inst, binfo);
 		}
@@ -3556,7 +3556,7 @@ int msm_comm_kill_session(struct msm_vidc_inst *inst)
 				msecs_to_jiffies(msm_vidc_hw_rsp_timeout));
 		if (!rc) {
 			dprintk(VIDC_ERR,
-					"%s: Wait interrupted or timed out [%p]: %d\n",
+					"%s: Wait interrupted or timed out [%pK]: %d\n",
 					__func__, inst, abort_completion);
 			msm_comm_generate_sys_error(inst);
 		} else {
