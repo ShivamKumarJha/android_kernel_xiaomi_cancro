@@ -7,6 +7,7 @@
  *  Copyright (c) 2006-2007 Jiri Kosina
  *  Copyright (c) 2007 Paul Walmsley
  *  Copyright (c) 2008 Jiri Slaby
+ *  Copyright (C) 2015 XiaoMi, Inc.
  */
 
 /*
@@ -145,17 +146,6 @@ static struct hid_driver cp_driver = {
 	.event = cp_event,
 	.probe = cp_probe,
 };
+module_hid_driver(cp_driver);
 
-static int __init cp_init(void)
-{
-	return hid_register_driver(&cp_driver);
-}
-
-static void __exit cp_exit(void)
-{
-	hid_unregister_driver(&cp_driver);
-}
-
-module_init(cp_init);
-module_exit(cp_exit);
 MODULE_LICENSE("GPL");

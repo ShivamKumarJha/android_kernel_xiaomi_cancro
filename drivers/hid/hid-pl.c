@@ -213,6 +213,7 @@ static const struct hid_device_id pl_devices[] = {
 	{ HID_USB_DEVICE(USB_VENDOR_ID_GAMERON, USB_DEVICE_ID_GAMERON_DUAL_PCS_ADAPTOR),
 		.driver_data = 1 }, /* Twin USB Joystick */
 	{ HID_USB_DEVICE(USB_VENDOR_ID_GREENASIA, 0x0003), },
+	{ HID_USB_DEVICE(USB_VENDOR_ID_JESS2, USB_DEVICE_ID_JESS2_COLOR_RUMBLE_PAD), },
 	{ }
 };
 MODULE_DEVICE_TABLE(hid, pl_devices);
@@ -222,17 +223,6 @@ static struct hid_driver pl_driver = {
 	.id_table = pl_devices,
 	.probe = pl_probe,
 };
+module_hid_driver(pl_driver);
 
-static int __init pl_init(void)
-{
-	return hid_register_driver(&pl_driver);
-}
-
-static void __exit pl_exit(void)
-{
-	hid_unregister_driver(&pl_driver);
-}
-
-module_init(pl_init);
-module_exit(pl_exit);
 MODULE_LICENSE("GPL");
