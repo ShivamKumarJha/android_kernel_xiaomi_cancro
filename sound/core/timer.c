@@ -1,6 +1,7 @@
 /*
  *  Timers abstract layer
  *  Copyright (c) by Jaroslav Kysela <perex@perex.cz>
+ *  Copyright (C) 2017 XiaoMi, Inc.
  *
  *
  *   This program is free software; you can redistribute it and/or modify

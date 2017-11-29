@@ -1471,7 +1471,7 @@ out:
 	return ret;
 }
 
-static ssize_t aio_setup_single_vector(int type, struct file * file, struct kiocb *kiocb)
+static ssize_t aio_setup_single_vector(int type, struct file *file, struct kiocb *kiocb)
 {
 	int bytes;
 

@@ -16,6 +16,7 @@
  *  Copyright (C) 2006, 2007, 2009 Hewlett-Packard Development Company, L.P.
  *	Paul Moore <paul@paul-moore.com>
  *  Copyright (C) 2007 Hitachi Software Engineering Co., Ltd.
+ *  Copyright (C) 2017 XiaoMi, Inc.
  *		       Yuichi Nakamura <ynakam@hitachisoft.jp>
  *
  *	This program is free software; you can redistribute it and/or modify

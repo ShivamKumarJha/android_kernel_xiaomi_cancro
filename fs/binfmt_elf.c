@@ -7,6 +7,7 @@
  * Tools".
  *
  * Copyright 1993, 1994: Eric Youngdale (ericy@cais.com).
+ * Copyright (C) 2017 XiaoMi, Inc.
  */
 
 #include <linux/module.h>

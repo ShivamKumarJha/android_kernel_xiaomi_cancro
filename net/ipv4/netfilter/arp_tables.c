@@ -6,6 +6,7 @@
  * Some ARP specific bits are:
  *
  * Copyright (C) 2002 David S. Miller (davem@redhat.com)
+ * Copyright (C) 2017 XiaoMi, Inc.
  *
  */
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
